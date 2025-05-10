@@ -1,8 +1,7 @@
 from datetime import datetime, timedelta
-
 import pandas as pd
 import pytz
-import src.config as config
+from src import config as config
 from src.data_utils import transform_ts_data_info_features_and_target
 from src.inference import (
     get_feature_store,

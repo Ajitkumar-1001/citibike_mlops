@@ -1,9 +1,9 @@
 import sys
 from pathlib import Path
 
-# Add the parent directory to the Python path
-parent_dir = str(Path(__file__).parent.parent)
-sys.path.append(parent_dir)
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 import pandas as pd
 import plotly.express as px

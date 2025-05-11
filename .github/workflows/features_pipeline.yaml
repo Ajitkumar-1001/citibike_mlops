@@ -1,7 +1,7 @@
 name: citibike_rides_features_pipeline
 on:
   schedule:
-    - cron: "1 * * * *"  
+    - cron: "0 * * * *"  
   workflow_dispatch: {}  
 jobs:
   run-python-script:

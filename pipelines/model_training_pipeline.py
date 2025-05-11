@@ -2,6 +2,11 @@ import joblib
 from hsml.model_schema import ModelSchema
 from hsml.schema import Schema
 from sklearn.metrics import mean_absolute_error
+import sys
+import os
+
+# Add project root to sys.path
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 import src.config as config
 from src.data_utils import transform_ts_data_info_features_and_target
@@ -17,6 +22,10 @@ print(f"Fetching data from group store ...")
 ts_data = fetch_days_data(28)
 print(len(ts_data))
 print(f"Transforming to ts_data ...")
+print(ts_data.head())
+print("Number of rows:", len(ts_data))
+print("Unique location_ids:", ts_data['location_id'].unique())
+
 
 features, targets = transform_ts_data_info_features_and_target(
     ts_data, window_size=24 * 28, step_size=12

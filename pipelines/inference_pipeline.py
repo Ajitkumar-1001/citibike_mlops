@@ -1,6 +1,15 @@
 from datetime import datetime, timedelta
 import pandas as pd
 import pytz
+import sys
+import os
+
+# Add project root to Python path
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+
+from datetime import datetime, timedelta
+import pandas as pd
+import pytz
 from src import config as config
 from src.data_utils import transform_ts_data_info_features_and_target
 from src.inference import (
@@ -31,10 +40,11 @@ ts_data = feature_view.get_batch_data(
     end_time=(fetch_data_to + timedelta(days=1)),
 )
 ts_data = ts_data[ts_data.pickup_hour.between(fetch_data_from, fetch_data_to)]
-ts_data.sort_values(["pickup_location_id", "pickup_hour"]).reset_index(drop=True)
+ts_data = ts_data.sort_values(["pickup_location_id", "pickup_hour"]).reset_index(drop=True)
 ts_data["pickup_hour"] = ts_data["pickup_hour"].dt.tz_localize(None)
 
-from src.data_utils import transform_ts_data_info_features
+from src.data_utils import transform_ts_data_info_features_and_target
+
 
 features,targets = transform_ts_data_info_features_and_target(ts_data, window_size=24*28, step_size=12)
 

@@ -7,16 +7,14 @@ import os
 # Add project root to Python path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-from datetime import datetime, timedelta
-import pandas as pd
-import pytz
-from src import config as config
+from src import config
 from src.data_utils import transform_ts_data_info_features_and_target
 from src.inference import (
     get_feature_store,
     get_model_predictions,
     load_model_from_registry,
 )
+
 
 # Get the current datetime64[us, Etc/UTC]
 # for number in range(22, 24 * 29):

@@ -2,22 +2,19 @@ import sys
 from pathlib import Path
 
 # Add the parent directory to the Python path
-sys.path.append(str(Path(__file__).resolve().parent.parent))
+parent_dir = str(Path(__file__).parent.parent)
+sys.path.append(parent_dir)
 
 import pandas as pd
 import plotly.express as px
 import streamlit as st
-from datetime import timedelta
 
-from src.inference import fetch_hourly_rides, fetch_predictions, load_metrics_from_registry, fetch_days_data
-from src.experiment_utils import set_mlflow_tracking
+from src.inference import fetch_hourly_rides, fetch_predictions, fetch_days_data
 
 # Set page configuration
 st.set_page_config(page_title="Citi Bike Model Monitoring", layout="wide")
 
-# Title and description
-st.title("Citi Bike Model Monitoring App")
-st.markdown("This app monitors the performance of the Citi Bike demand prediction model.")
+st.title("Mean Absolute Error (MAE) by Pickup Hour")
 
 # Sidebar for user input
 st.sidebar.header("Settings")
@@ -29,15 +26,15 @@ past_days = st.sidebar.slider(
     step=1,
 )
 
-# Section 1: MAE Over Time (from Hopsworks data)
-st.header("Mean Absolute Error (MAE) by Pickup Hour")
+# Convert days to hours for fetch_predictions
+past_hours = past_days * 24
 
 # Fetch data
-st.write("Fetching data for the past", past_days, "days...")
+st.write("Fetching data for the past", past_days, "days (", past_hours, "hours)...")
 try:
-    # Fetch data using fetch_days_data to get historical data from 52 weeks ago
+    # Fetch actual rides using fetch_days_data (simulated data from 52 weeks ago)
     df1 = fetch_days_data(past_days)
-    df2 = fetch_predictions(past_days * 24)  # Convert days to hours
+    df2 = fetch_predictions(past_hours)
 
     # Debug: Inspect the DataFrames
     st.write("Actual Rides Data (df1):", df1.head())
@@ -69,7 +66,7 @@ try:
         if mae_by_hour.empty:
             st.warning("No MAE data to plot after grouping.")
         else:
-            # Create a Plotly plot for MAE over time
+            # Create a Plotly plot
             fig = px.line(
                 mae_by_hour,
                 x="pickup_hour",
@@ -84,4 +81,4 @@ try:
             avg_mae = mae_by_hour["MAE"].mean()
             st.write(f'Average MAE: {avg_mae:.2f}' if not pd.isna(avg_mae) else "Average MAE: nan")
 except Exception as e:
-    st.error(f"Error fetching MLflow metrics: {str(e)}")
+    st.error(f"Error fetching data or calculating MAE: {str(e)}")

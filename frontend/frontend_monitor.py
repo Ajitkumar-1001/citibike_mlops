@@ -84,4 +84,4 @@ try:
             avg_mae = mae_by_hour["MAE"].mean()
             st.write(f'Average MAE: {avg_mae:.2f}' if not pd.isna(avg_mae) else "Average MAE: nan")
 except Exception as e:
-    st.error(f"Error fetching data or calculating MAE: {str
+    st.error(f"Error fetching MLflow metrics: {str(e)}")
